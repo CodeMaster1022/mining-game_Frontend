@@ -59,14 +59,24 @@ export function MiningFloor({
   useEffect(() => {
     const updatePosition = () => {
       if (boxRef.current) {
-        const rect = boxRef.current.getBoundingClientRect();
+        // const rect = boxRef.current.clientHeight;
         // Add this position to your floor state through Redux or state management
-        const boxPosition = {
-          floorId: floor.id,
-          bottomPosition: Math.round(rect.bottom),
-        };
+        if(floor.id == 1) {
+            const boxPosition = {
+                floorId: floor.id,
+                bottomPosition: 65,
+            };
+            dispatch(updateBoxPosition(boxPosition))
+        } else {
+            const boxPosition = {
+                floorId: floor.id,
+                bottomPosition: 65 + (110*(floor.id - 1)),
+            };
+            dispatch(updateBoxPosition(boxPosition))
+        }
+
         // Dispatch action to update floor state with box position
-        dispatch(updateBoxPosition(boxPosition))
+        
       }
     };
     if(!floor.bottomPosition){
@@ -76,8 +86,8 @@ export function MiningFloor({
   }, [floor.id]);
   return (
     <>
-      <div className="relative h-16 bg-gray-900 border-b-2 border-gray-700 overflow-hidden group">
-        <div className="bg-[url('./assets/floor.png')] bg-cover bg-center bg-no-repeat h-16 flex justify-between">
+      <div className="relative h-24 bg-gray-900 border-b-2 border-gray-700 overflow-hidden group">
+        <div className="bg-[url('./assets/floor.png')] bg-cover bg-center bg-no-repeat h-20 flex justify-between">
           <div className="flex">
             <div className="flex flex-col">
               <motion.div
@@ -100,7 +110,7 @@ export function MiningFloor({
               />
               <div
                 onClick={() => setShowUpgradeModal(true)}
-                className="bg-[url('./assets/levelbox.png')] bg-cover bg-center ml-1 mt-1 bg-no-repeat h-10 w-10 flex justify-center items-center"
+                className="bg-[url('./assets/levelbox.png')] bg-cover bg-center ml-1 mt-3 bg-no-repeat h-10 w-10 flex justify-center items-center"
               >
                 <p className="text-white font-pixel text-[8px]">
                   Level
@@ -108,7 +118,7 @@ export function MiningFloor({
                 </p>
               </div>
             </div>
-            <div className="bg-[url('./assets/wall.png')] bg-cover bg-center bg-no-repeat w-2 ml-3 flex justify-between"></div>
+            <div className="bg-[url('./assets/wall.png')] bg-cover bg-center bg-no-repeat w-4 ml-3 flex justify-between"></div>
             {/* Miner container */}
           </div>
           <div ref={minerContainerRef} className="flex-1 w-full">
@@ -131,7 +141,7 @@ export function MiningFloor({
                 ease: "easeInOut",
               }}
               onClick={() => setShowManagerModal(true)}
-              className="relative w-6 h-6 mr-[72px] mt-8"
+              className="relative w-6 h-6 mr-[68px] mt-10"
             >
               {/* Horizontal line */}
               <div className="absolute top-1/2 left-0 w-full h-1 bg-white transform -translate-y-1/2" />
@@ -141,15 +151,16 @@ export function MiningFloor({
             </motion.div>
           </div>
           <div className="absolute right-0 top-0">
-            <div className="relative right-2 top-11">
+            <div className="relative mr-1 top-[58px]">
               <span className="absolute bottom-full font-pixel ml-2 text-[12px] font-bold text-white pb-0 mb-0">
                 {" "}
-                {floorSaveCapacity.toFixed(1)}
+                <p className="text-xs">{floorSaveCapacity.toFixed(0)}</p>
               </span>
               <div  ref={boxRef} className="bg-[url('./assets/box.png')] bg-cover bg-center ml-1 bg-no-repeat h-4 w-8"></div>
             </div>
           </div>
         </div>
+        <div className="w-full h-4 bg-[url('./assets/top.png')] bg-cover bg-center"></div>
       </div>
 
       <AnimatePresence>

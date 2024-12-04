@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ManagerType } from "@/types/manager"
 import { modalVariants, listItemVariants, buttonVariants } from "./animations/variant"
+import { formatNumber } from '@/utils/number-formatter'
 
 interface ManagerUpgradeModalProps {
   managers: ManagerType[]
@@ -85,7 +86,7 @@ export function ManagerUpgradeModal({ managers, onHire, onClose, gold }: Manager
                     }
                   }}
                 >
-                  {manager.cost}k
+                  {formatNumber(manager.cost)}
                 </motion.div>
                 <motion.div
                   variants={buttonVariants}

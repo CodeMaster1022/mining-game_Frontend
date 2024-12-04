@@ -23,7 +23,6 @@ export function FloorUpgradeModal({
   gold 
 }: FloorUpgradeModalProps) {
   const canAfford = gold >= upgradeStats.upgradeCost
-  const floorUpgradeVariable = floor.id/2;
 
   return (
     <motion.div
@@ -67,9 +66,9 @@ export function FloorUpgradeModal({
               className="bg-blue-800 py-1 px-3 rounded-lg flex justify-between items-center"
               whileHover={{ scale: 1.05, backgroundColor: "rgba(30, 64, 175, 0.8)" }}
             >
-              <span className="text-white font-pixel">Production Rate</span>
+              <span className="text-white font-pixel text-xs">Production Rate</span>
               <div className="text-right">
-                <div className="text-white font-pixel text-xs">{formatNumber(floor.production*floorUpgradeVariable)}</div>
+                <div className="text-white font-pixel text-xs">{formatNumber(floor.production)}</div>
                 <motion.div 
                   className="text-green-400 text-sm font-pixel"
                   animate={{
@@ -77,7 +76,7 @@ export function FloorUpgradeModal({
                     transition: { duration: 2, repeat: Infinity }
                   }}
                 >
-                  +{(upgradeStats.nextProduction - floor.production).toFixed(1)}/s
+                  +{(upgradeStats.nextProduction - floor.production).toFixed(1)}
                 </motion.div>
               </div>
             </motion.div>
@@ -88,7 +87,7 @@ export function FloorUpgradeModal({
             >
               <span className="text-white font-pixel text-xs">Storage Capacity</span>
               <div className="text-right">
-                <div className="text-white font-pixel text-xs">{formatNumber(floor.capacity*floorUpgradeVariable)}</div>
+                <div className="text-white font-pixel text-xs">{formatNumber(floor.capacity)}</div>
                 <motion.div 
                   className="text-green-400 text-xs font-pixel"
                   animate={{
@@ -96,7 +95,7 @@ export function FloorUpgradeModal({
                     transition: { duration: 2, repeat: Infinity }
                   }}
                 >
-                  +{(upgradeStats.nextCapacity - floor.capacity).toFixed(1)}
+                  +{formatNumber(upgradeStats.nextCapacity - floor.capacity)}
                 </motion.div>
               </div>
             </motion.div>
@@ -110,7 +109,7 @@ export function FloorUpgradeModal({
                 transition: { duration: 2, repeat: Infinity }
               }}
             >
-              {upgradeStats.upgradeCost.toFixed(1)}K
+              {formatNumber(upgradeStats.upgradeCost)}
             </motion.div>
             <motion.div
               variants={buttonVariants}

@@ -87,7 +87,7 @@ export function ElevatorUpgradeModal({ stats, onUpgrade, onClose }: ElevatorUpgr
             >
               <span className="text-white font-pixel">Movement speed</span>
               <div className="text-right">
-                <div className="text-white font-pixel text-xs">{stats.movementSpeed.toFixed(2)}s</div>
+                <div className="text-white font-pixel text-xs">{stats.movementSpeed.toFixed(2)}</div>
                 <motion.div 
                   className="text-green-400 text-xs font-pixel"
                   animate={{

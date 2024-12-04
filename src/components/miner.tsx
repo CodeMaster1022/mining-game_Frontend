@@ -88,7 +88,7 @@ const Miner: React.FC<MinerProps> = ({ containerWidth, onReachRight }) => {
   return (
     <motion.div
       ref={scope}
-      className="absolute bottom-0 w-6 h-12"
+      className="absolute bottom-4 w-6 h-12"
       initial={{ x: 0, y: 0 }}
     >
       <div 

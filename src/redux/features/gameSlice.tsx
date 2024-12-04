@@ -4,7 +4,7 @@ import { MANAGER_TYPES } from '@/types/manager';
 import { getFloorUpgradeStats } from '@/utils/floor-calculations';
 
 const INITIAL_STATE: GameState = {
-  gold: 0,
+  gold: 100,
   tokens: 0,
   tokensClaimed: 0,
   currentProduction: 0,
@@ -26,9 +26,9 @@ const INITIAL_STATE: GameState = {
     eBottomPosition: 0,
     level: 1,
     loadCapacity: 20,
-    movementSpeed: 10,
+    movementSpeed: 1.001,
     nextLoadCapacity: 35,
-    nextMovementSpeed: 11,
+    nextMovementSpeed: 1.002,
     upgradeCost: 14,
     currentLoad:0,
   }
@@ -106,7 +106,7 @@ const gameSlice = createSlice({
       state.elevator.level += 1;
       state.elevator.loadCapacity = state.elevator.nextLoadCapacity;
       state.elevator.movementSpeed = state.elevator.nextMovementSpeed;
-      state.elevator.nextLoadCapacity *= 1.2;
+      state.elevator.nextLoadCapacity *= 2;
       state.elevator.nextMovementSpeed *= 1.05;
       state.elevator.upgradeCost *= 1.5;
     },
@@ -115,8 +115,8 @@ const gameSlice = createSlice({
       state.elevator.currentLoad = 0;
     },
     unlockNewShaft: (state) => {
+      console.log('unlocking new shaft', state.currentShaftCost);
       if (state.gold < state.currentShaftCost) return;
-
       state.gold -= state.currentShaftCost;
       state.currentShaft += 1;
       state.currentShaftCost *= 2;
@@ -124,7 +124,7 @@ const gameSlice = createSlice({
         id: state.floors.length + 1,
         level: 1,
         managers: [],
-        production: 20,
+        production: 10*((state.floors.length+1)*state.floors.length),
         capacity: 100,
         upgradeCost: 10,
         saveCapacity: 0,

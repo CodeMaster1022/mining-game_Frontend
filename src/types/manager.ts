@@ -11,7 +11,7 @@ export interface ManagerType {
     {
       id: 'vex',
       name: 'Vex',
-      cost: 200,
+      cost: 20000,
       effect: 'x2',
       description: 'Total Extraction',
       icon: '🤖'
@@ -19,25 +19,25 @@ export interface ManagerType {
     {
       id: 'zor',
       name: 'Zor',
-      cost: 400,
+      cost: 40000,
       effect: 'x2',
-      description: 'Worker Capacity',
+      description: 'Capacity',
       icon: '🦾'
     },
     {
       id: 'myx',
       name: 'Myx',
-      cost: 800,
+      cost: 80000,
       effect: 'x2',
-      description: 'Mining Speed',
+      description: 'Speed',
       icon: '⚡'
     },
     {
       id: 'crix',
       name: 'Crix',
-      cost: 999,
+      cost: 99000,
       effect: 'x2',
-      description: 'Boost to $SHT gather rate',
+      description: 'Boost',
       icon: '💎'
     }
   ]
