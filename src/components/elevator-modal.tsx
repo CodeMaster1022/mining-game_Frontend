@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { modalVariants, buttonVariants } from "./animations/variant"
+import { formatNumber } from '@/utils/number-formatter'
 
 interface ElevatorStats {
   level: number
@@ -67,7 +68,7 @@ export function ElevatorUpgradeModal({ stats, onUpgrade, onClose }: ElevatorUpgr
             >
               <span className="text-white font-pixel">Max load capacity</span>
               <div className="text-right">
-                <div className="text-white font-pixel text-xs">{stats.loadCapacity.toFixed(1)}k</div>
+                <div className="text-white font-pixel text-xs">{formatNumber(stats.loadCapacity)}</div>
                 <motion.div 
                   className="text-green-400 font-pixel text-xs"
                   animate={{
@@ -75,7 +76,7 @@ export function ElevatorUpgradeModal({ stats, onUpgrade, onClose }: ElevatorUpgr
                     transition: { duration: 2, repeat: Infinity }
                   }}
                 >
-                  +{(stats.nextLoadCapacity - stats.loadCapacity).toFixed(1)}k
+                  +{formatNumber(stats.nextLoadCapacity - stats.loadCapacity)}
                 </motion.div>
               </div>
             </motion.div>
@@ -87,7 +88,7 @@ export function ElevatorUpgradeModal({ stats, onUpgrade, onClose }: ElevatorUpgr
             >
               <span className="text-white font-pixel">Movement speed</span>
               <div className="text-right">
-                <div className="text-white font-pixel text-xs">{stats.movementSpeed.toFixed(2)}</div>
+                <div className="text-white font-pixel text-xs">{(stats.movementSpeed.toFixed(2))}</div>
                 <motion.div 
                   className="text-green-400 text-xs font-pixel"
                   animate={{
@@ -137,7 +138,11 @@ export function ElevatorUpgradeModal({ stats, onUpgrade, onClose }: ElevatorUpgr
                 transition: { duration: 2, repeat: Infinity }
               }}
             >
-              {stats.upgradeCost.toFixed(1)}K
+          <div className="text-white font-pixel pulse flex items-center pr-2 rounded-lg min-w-[60px] justify-between">
+            <div className="bg-[url('./assets/dollar.png')] bg-cover bg-center bg-no-repeat h-[20px] w-[20px]"/>
+            {formatNumber(stats.upgradeCost)}
+          </div>
+              
             </motion.div>
             <motion.div
               variants={buttonVariants}

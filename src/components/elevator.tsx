@@ -48,7 +48,7 @@ export function Elevator({ level, stats, onUpgrade }: ElevatorProps) {
   const [isMovingUp, setIsMovingUp] = useState(true);
   const isMoving = true;
   useEffect(() => {
-    console.log(floor);
+    console.log(elevatorState.movementSpeed,'=====>movementspped');
     if (containerRef.current) {
       setPosition(containerRef.current.clientHeight - 10);
     }
@@ -70,6 +70,7 @@ export function Elevator({ level, stats, onUpgrade }: ElevatorProps) {
 
       if (isMovingUp) {
         if (position < newMaxPosition) {
+          console.log(elevatorState.movementSpeed)
           setPosition((prev) => Math.min(prev + elevatorState.movementSpeed, newMaxPosition));
         } else {
           setIsMovingUp(false);
@@ -103,10 +104,12 @@ export function Elevator({ level, stats, onUpgrade }: ElevatorProps) {
 
   useEffect(() => {
     const checkFloorInterval = setInterval(() => {
-      floor.forEach((floorItem) => {
-      
+      floor.forEach((floorItem) => {     
         // Check if elevator position matches floor position
-        if (Math.abs(position - maxPosition).toFixed(0) === floorItem.bottomPosition.toString()) {
+        // console.log(Math.abs(Number(Math.abs(position - maxPosition).toFixed(0))-Number(floorItem.bottomPosition.toString())),'++++++++++')
+        if (Math.abs(Number(Math.abs(position - maxPosition).toFixed(0))-Number(floorItem.bottomPosition.toString()))<2) {
+          // console.log(Number(Math.abs(position - maxPosition).toFixed(0))-Number(floorItem.bottomPosition.toString()),'++++++++++')
+          // console.log(Math.abs(position - maxPosition).toFixed(0), floorItem.bottomPosition.toString(),'------')
           dispatch(collectFromFloor(floorItem.id));
         }
       });
@@ -129,7 +132,7 @@ export function Elevator({ level, stats, onUpgrade }: ElevatorProps) {
           initial="initial"
           whileTap="tap"
         >
-          <span className="text-white font-pixel text-sm">Level {level}</span>
+          <span className="text-white font-pixel text-xs">Level {level}</span>
           <div className="bg-[url('./assets/elevator.png')] bg-cover bg-center bg-no-repeat h-[50px] w-[50px]" />
         </motion.button>
 
@@ -174,7 +177,7 @@ export function Elevator({ level, stats, onUpgrade }: ElevatorProps) {
             }}
             onUpgrade={() => {
               onUpgrade()
-              setShowUpgrade(false)
+              // setShowUpgrade(false)
             }}
             onClose={() => setShowUpgrade(false)}
           />

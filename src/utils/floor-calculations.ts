@@ -5,11 +5,11 @@ export function calculateUpgradeCost(level: number): number {
 }
 
 export function calculateNextProduction(currentProduction: number): number {
-  return currentProduction * 1.5
+  return currentProduction * 1.2
 }
 
 export function calculateNextCapacity(currentCapacity: number): number {
-  return currentCapacity * 1.4
+  return currentCapacity * 1.1
 }
 
 export function getFloorUpgradeStats(floor: Floor) {

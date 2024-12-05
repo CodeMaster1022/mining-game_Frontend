@@ -8,10 +8,15 @@ import { motion, AnimatePresence } from 'framer-motion'
 // import { GameState } from "@/types/game"
 import { MANAGER_TYPES } from "@/types/manager"
 import { formatNumber } from "@/utils/number-formatter"
+// import { useGameSync } from "@/hooks/useGameSync"
+import { updateGameState } from "@/redux/features/gameSlice"
+import { fetchGameState } from "@/api/gameApi"
+import { saveGameState } from '@/api/gameApi';
 // import { getFloorUpgradeStats } from "@/utils/floor-calculations"
 import "../styles/animations.css"
 import { useAppDispatch, useAppSelector } from "@/hooks/store";
 import { unlockNewShaft,hireManager,upgradeFloor, upgradeElevator, updateSaveCapacity } from "@/redux/features/gameSlice";
+
 export default function SpaceMinerTycoon() {
   const dispatch = useAppDispatch();
   const gameState = useAppSelector((state) => state.game);
@@ -19,6 +24,23 @@ export default function SpaceMinerTycoon() {
   const [elevatorProgress, setElevatorProgress] = useState(0);
   const [showGoldAnimation, setShowGoldAnimation] = useState(false);
   const [isExploding, setIsExploding] = useState(false);
+  // useGameSync("userIDStreet");
+  useEffect(() => {
+    console.log(gameState, 'gameState');
+    const loadGameState = async () => {
+      try {
+        const gameState = await fetchGameState("userIDStreet");
+        dispatch(updateGameState(gameState));
+      } catch (error) {
+        console.error('Failed to load game state:', error);
+      }
+    };
+
+    loadGameState();
+  }, [dispatch]);  
+  const handleClaim = () => {
+    saveGameState("userIDStreet", gameState);
+  }
   const handleClick = () => {
     const result  = dispatch(unlockNewShaft());
     console.log(result, 'result');
@@ -30,6 +52,7 @@ export default function SpaceMinerTycoon() {
   }, [gameState.currentProduction]);
 
   useEffect(() => {
+    console.log("=====>")
     const gameLoop = setInterval(() => {
       const newGold = gameState.gold + gameState.floors.reduce((acc, floor) => {
         const floorManagers = floor.managers.reduce((total, manager) => {
@@ -72,12 +95,26 @@ export default function SpaceMinerTycoon() {
     <div className="min-h-screen bg-black">
       <header className="p-4 bg-gray-800 relative">
         <div className="flex justify-between max-w-4xl mx-auto">
-          <div className="text-white font-pixel pulse">Tokens: {formatNumber(gold)}</div>
-          <div className="text-white font-pixel">Claimed: ${gameState.tokensClaimed}</div>
+          <div className="text-white font-pixel pulse flex items-center bg-gray-900 pr-2 rounded-lg min-w-[60px] justify-between">
+            <div className="bg-[url('./assets/dollar.png')] bg-cover bg-center bg-no-repeat h-[20px] w-[20px]"/>
+              &nbsp;{formatNumber(gold)}
+          </div>
+          {/* <div className="text-white font-pixel pulse flex items-center bg-gray-900 pr-2 rounded-lg min-w-[60px] justify-between">
+            <div className="bg-[url('./assets/dollar.png')] bg-cover bg-center bg-no-repeat h-[20px] w-[20px]"/>
+              &nbsp;{formatNumber(gold/2)}
+          </div> */}
+          <div 
+            className="text-white font-pixel pulse flex items-center bg-green-900 pr-2 rounded-lg min-w-[80px] justify-center space-x-2"
+            onClick={handleClaim}
+            >
+            <div className="bg-[url('./assets/claim.png')] bg-cover bg-center bg-no-repeat h-[20px] w-[20px]"/>
+              {/* &nbsp;{formatNumber(gameState.tokensClaimed)} */}
+              &nbsp;Claim
+          </div>
         </div>
       </header>
 
-      <main className="max-w-full mx-auto mt-8">
+      <main className="max-w-full mx-auto">
         <div className="bg-[url('./assets/background1.png')] bg-cover bg-center bg-no-repeat h-[300px]" />
         <div className="grid grid-cols-[7fr_1fr]">
           <div className="bg-[url('./assets/top.png')] bg-cover bg-center bg-no-repeat h-[30px]" />

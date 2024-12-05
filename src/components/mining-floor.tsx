@@ -10,6 +10,7 @@ import { getFloorUpgradeStats } from "@/utils/floor-calculations";
 import { motion } from "framer-motion";
 import { useAppSelector, useAppDispatch } from "@/hooks/store";
 import { updateBoxPosition } from "@/redux/features/gameSlice";
+import { formatNumber } from "@/utils/number-formatter";
 import Miner from "./miner";
 interface MiningFloorProps {
   floor: Floor;
@@ -131,30 +132,40 @@ export function MiningFloor({
             />
           </div>
           <div className="flex items-center justify-end h-full">
-            <motion.div
-              animate={{
-                y: [0, -0, 0],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              onClick={() => setShowManagerModal(true)}
-              className="relative w-6 h-6 mr-[68px] mt-10"
-            >
-              {/* Horizontal line */}
-              <div className="absolute top-1/2 left-0 w-full h-1 bg-white transform -translate-y-1/2" />
-
-              {/* Vertical line */}
-              <div className="absolute left-1/2 top-0 h-full w-1 bg-white transform -translate-x-1/2" />
-            </motion.div>
+            {
+                floor.managers.length === 0 ?
+                (
+                <motion.div
+                    animate={{
+                        y: [0, -0, 0],
+                    }}
+                    transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                    }}
+                    onClick={() => setShowManagerModal(true)}
+                    className="relative w-6 h-6 mr-[68px] mt-10"
+                >
+                {/* Horizontal line */}
+                <div className="absolute top-1/2 left-0 w-full h-1 bg-white transform -translate-y-1/2" />
+    
+                {/* Vertical line */}
+                <div className="absolute left-1/2 top-0 h-full w-1 bg-white transform -translate-x-1/2" />
+                </motion.div>
+                )
+                :(
+                    <div className="relative w-[20px] h-[65px] mr-[80px] mt-4" onClick={() => setShowManagerModal(true)}>
+                        <div className="absolute left-1/2 top-0 h-full w-[35px] transform -translate-x-1/2 bg-[url('./assets/robot.png')] bg-cover bg-center "></div>
+                    </div>
+                )
+            }
           </div>
           <div className="absolute right-0 top-0">
             <div className="relative mr-1 top-[58px]">
               <span className="absolute bottom-full font-pixel ml-2 text-[12px] font-bold text-white pb-0 mb-0">
                 {" "}
-                <p className="text-xs">{floorSaveCapacity.toFixed(0)}</p>
+                <p className="text-xs">{formatNumber(floorSaveCapacity)}</p>
               </span>
               <div  ref={boxRef} className="bg-[url('./assets/box.png')] bg-cover bg-center ml-1 bg-no-repeat h-4 w-8"></div>
             </div>
@@ -182,7 +193,7 @@ export function MiningFloor({
             upgradeStats={upgradeStats}
             onUpgrade={() => {
               onUpgradeFloor(floor.id);
-              setShowUpgradeModal(false);
+            //   setShowUpgradeModal(false);
             }}
             onClose={() => setShowUpgradeModal(false)}
             gold={gold}

@@ -1,10 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { GameState } from '@/types/game';
 import { MANAGER_TYPES } from '@/types/manager';
-import { getFloorUpgradeStats } from '@/utils/floor-calculations';
 
 const INITIAL_STATE: GameState = {
-  gold: 100,
+  gold: 1000000,
   tokens: 0,
   tokensClaimed: 0,
   currentProduction: 0,
@@ -13,23 +12,23 @@ const INITIAL_STATE: GameState = {
       id: 1,
       level: 1,
       managers: [],
-      production: 10,
+      production: 20,
       capacity: 100,
-      upgradeCost: 15,
+      upgradeCost: 10,
       saveCapacity: 0,
       bottomPosition:0,
     },
   ],
   currentShaft: 1,
-  currentShaftCost: 30,
+  currentShaftCost: 500,
   elevator: {
     eBottomPosition: 0,
     level: 1,
-    loadCapacity: 20,
-    movementSpeed: 1.001,
-    nextLoadCapacity: 35,
-    nextMovementSpeed: 1.002,
-    upgradeCost: 14,
+    loadCapacity: 600,
+    movementSpeed: 1.5,
+    nextLoadCapacity:600*1.33,
+    nextMovementSpeed: 1.51,
+    upgradeCost: 300,
     currentLoad:0,
   }
 };
@@ -44,6 +43,9 @@ const gameSlice = createSlice({
     addGoldFromElevator: (state, action: PayloadAction<number>) => {
       state.gold += action.payload;
     },
+    updateGameState: (_state, action: PayloadAction<GameState>) => {
+      return action.payload;
+    },    
     updateSaveCapacity: (state, action: PayloadAction<{ floorId: number; totalProduction: number }>) => {
       const floor = state.floors.find(f => f.id === action.payload.floorId);
       if (floor) {
@@ -67,26 +69,31 @@ const gameSlice = createSlice({
       state.gold -= managerType.cost;
       const floor = state.floors.find(f => f.id === floorId);
       if (floor) {
+        // Simply double the current production
+        const newProduction = floor.production * 2;
+        
         floor.managers.push({
           id: floor.managers.length + 1,
           type: managerId,
           level: 1,
-          production: floor.production*2
+          production: newProduction
         });
+
+        floor.production = newProduction;
       }
     },
     upgradeFloor: (state, action: PayloadAction<number>) => {
       const floor = state.floors.find(f => f.id === action.payload);
       if (!floor) return;
 
-      const upgradeStats = getFloorUpgradeStats(floor);
-      if (state.gold < upgradeStats.upgradeCost) return;
+      // const upgradeStats = getFloorUpgradeStats(floor);
+      if (state.gold < floor.upgradeCost) return;
 
-      state.gold -= upgradeStats.upgradeCost;
+      state.gold -= floor.upgradeCost;
       floor.level += 1;
-      floor.production = upgradeStats.nextProduction;
-      floor.capacity = upgradeStats.nextCapacity;
-      floor.upgradeCost = upgradeStats.upgradeCost;
+      floor.production *= 1.15;
+      floor.capacity *= 1.1;
+      floor.upgradeCost *=1.2;
     },
     collectFromFloor: (state, action: PayloadAction<number>) => {
       const floor = state.floors.find(f => f.id === action.payload);
@@ -104,11 +111,11 @@ const gameSlice = createSlice({
 
       state.gold -= state.elevator.upgradeCost;
       state.elevator.level += 1;
-      state.elevator.loadCapacity = state.elevator.nextLoadCapacity;
-      state.elevator.movementSpeed = state.elevator.nextMovementSpeed;
-      state.elevator.nextLoadCapacity *= 2;
-      state.elevator.nextMovementSpeed *= 1.05;
-      state.elevator.upgradeCost *= 1.5;
+      state.elevator.loadCapacity = state.elevator.loadCapacity * 1.33;
+      state.elevator.movementSpeed += 0.01 ;
+      state.elevator.nextLoadCapacity *= 1.33;
+      state.elevator.nextMovementSpeed += 0.01;
+      state.elevator.upgradeCost *= 1.16;
     },
     emptyElevator: (state) => {
       state.gold += state.elevator.currentLoad;
@@ -119,14 +126,15 @@ const gameSlice = createSlice({
       if (state.gold < state.currentShaftCost) return;
       state.gold -= state.currentShaftCost;
       state.currentShaft += 1;
-      state.currentShaftCost *= 2;
+      state.currentShaftCost *= 10;
       state.floors.push({
         id: state.floors.length + 1,
         level: 1,
         managers: [],
-        production: 10*((state.floors.length+1)*state.floors.length),
+        // production: 10^((state.floors.length+1)*state.floors.length),
+        production: 10 ** ((state.floors.length + 1)),
         capacity: 100,
-        upgradeCost: 10,
+        upgradeCost: 10 ** ((state.floors.length + 2)),
         saveCapacity: 0,
         bottomPosition:0,
       });
@@ -138,6 +146,7 @@ const gameSlice = createSlice({
 });
 
 export const {
+  updateGameState,
   updateGold,
   addGoldFromElevator,
   updateSaveCapacity,
