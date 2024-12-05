@@ -17,6 +17,7 @@ interface MiningFloorProps {
   onHireManager: (floorId: number, managerId: string) => void;
   onUpgradeFloor: (floorId: number) => void;
   gold: number;
+  containerWidth:number;
   onUpdateSaveCapacity: (floorId: number, totalProduction: number) => void;
 }
 export function MiningFloor({
@@ -24,12 +25,11 @@ export function MiningFloor({
   onHireManager,
   onUpgradeFloor,
   gold,
+  containerWidth,
   onUpdateSaveCapacity,
 }: MiningFloorProps) {
 
   const boxRef = useRef<HTMLDivElement>(null);
-  const [containerWidth, setContainerWidth] = useState(350);
-  const minerContainerRef = useRef<HTMLDivElement>(null);
   const [showManagerModal, setShowManagerModal] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const upgradeStats = getFloorUpgradeStats(floor);
@@ -47,19 +47,9 @@ export function MiningFloor({
     setTotalProduction(floorSaveCapacity);
   }, [floorSaveCapacity]);
   useEffect(() => {
-    const updateWidth = () => {
-      if (minerContainerRef.current) {
-        console.log(containerWidth);
-        const rect = minerContainerRef.current.getBoundingClientRect().width;
-        setContainerWidth(rect);
-      } 
-    };
-    const interval = setInterval(updateWidth, 3000);
-    return () => clearInterval(interval);
-  }, []);
-  useEffect(() => {
     const updatePosition = () => {
       if (boxRef.current) {
+        console.log(boxRef.current.clientWidth,'--------------->');
         // const rect = boxRef.current.clientHeight;
         // Add this position to your floor state through Redux or state management
         if(floor.id == 1) {
@@ -122,9 +112,9 @@ export function MiningFloor({
             <div className="bg-[url('./assets/wall.png')] bg-cover bg-center bg-no-repeat w-4 ml-3 flex justify-between"></div>
             {/* Miner container */}
           </div>
-          <div ref={minerContainerRef} className="flex-1 w-full">
+          <div className="flex-1 w-full">
             <Miner
-              containerWidth={230}
+              containerWidth={containerWidth}
               onReachRight={() =>
                 setTotalProduction((prev) => prev + floor.production)
               }
