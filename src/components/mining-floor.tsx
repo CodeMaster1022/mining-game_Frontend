@@ -113,13 +113,16 @@ export function MiningFloor({
             {/* Miner container */}
           </div>
           <div className="flex-1 w-full">
-            <Miner
-              containerWidth={containerWidth}
-              onReachRight={() =>
-                setTotalProduction((prev) => prev + floor.production)
-              }
-              key={floor.production} // This ensures Miner re-renders with new production value
-            />
+            {
+                containerWidth >20 ? (            <Miner
+                    containerWidth={containerWidth}
+                    onReachRight={() =>
+                      setTotalProduction((prev) => prev + floor.production)
+                    }
+                    key={floor.production} // This ensures Miner re-renders with new production value
+                  />):(<></>)
+            }
+
           </div>
           <div className="flex items-center justify-end h-full">
             {
