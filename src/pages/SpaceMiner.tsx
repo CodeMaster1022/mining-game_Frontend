@@ -16,7 +16,7 @@ import { saveGameState } from '@/api/gameApi';
 import "../styles/animations.css"
 import { useAppDispatch, useAppSelector } from "@/hooks/store";
 import { unlockNewShaft,hireManager,upgradeFloor, upgradeElevator, updateSaveCapacity } from "@/redux/features/gameSlice";
-
+import { useTelegram } from '../hooks/useTelegram';
 export default function SpaceMinerTycoon() {
   const dispatch = useAppDispatch();
   const gameState = useAppSelector((state) => state.game);
@@ -24,6 +24,7 @@ export default function SpaceMinerTycoon() {
   const [elevatorProgress, setElevatorProgress] = useState(0);
   const [showGoldAnimation, setShowGoldAnimation] = useState(false);
   const [isExploding, setIsExploding] = useState(false);
+  const { user } = useTelegram();
   // useGameSync("userIDStreet");
   useEffect(() => {
     console.log(gameState, 'gameState');
@@ -39,9 +40,11 @@ export default function SpaceMinerTycoon() {
     loadGameState();
   }, [dispatch]);  
   const handleClaim = () => {
-    saveGameState("userIDStreet", gameState);
-  }
-  const handleClick = () => {
+    if (user?.username) {
+      saveGameState(user.username, gameState);
+    }
+  }  
+    const handleClick = () => {
     const result  = dispatch(unlockNewShaft());
     console.log(result, 'result');
     setIsExploding(true)

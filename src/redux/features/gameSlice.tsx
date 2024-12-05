@@ -3,7 +3,7 @@ import { GameState } from '@/types/game';
 import { MANAGER_TYPES } from '@/types/manager';
 
 const INITIAL_STATE: GameState = {
-  gold: 1000000,
+  gold: 0,
   tokens: 0,
   tokensClaimed: 0,
   currentProduction: 0,
